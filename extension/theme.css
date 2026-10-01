@@ -1,5 +1,5 @@
 /* WhatsApp paints its wallpaper on a dedicated layer covering the whole chat pane (incl. behind the composer); swap its image. */
-html[data-wt-on] [data-testid="stock-wallpaper-image"] { background-image: none !important; overflow: hidden !important; }
+html[data-wt-on] [data-testid="stock-wallpaper-image"], html[data-wt-on] [data-wt-wallpaper] { background-image: none !important; overflow: hidden !important; }
 .wt-wall { position: absolute; pointer-events: none; width: calc(100vw + 80px); height: calc(100vh + 80px); left: calc(-1 * var(--wt-wx, 0px) - 40px); top: calc(-1 * var(--wt-wy, 0px) - 40px); background: var(--wt-wall) center / cover; }
 html[data-wt-on] #main .copyable-area,
 html[data-wt-on] #main footer,
@@ -26,3 +26,4 @@ html[data-wt-on] #main header[data-wt-hdr], html[data-wt-on] [data-testid="drawe
 html[data-wt-on] [data-testid="drawer-right"], html[data-wt-on] [data-testid="drawer-left"], html[data-wt-on] [data-testid="drawer-middle"], html[data-wt-on] [data-testid="intro-panel"] { --WDS-surface-default: transparent !important; --WDS-surface-emphasized: transparent !important; background: transparent !important; }
 html[data-wt-on] [data-testid="chat-info-drawer"] { background: transparent !important; }
 html[data-wt-on] [data-wt-clear="1"] { background: transparent !important; }
+html[data-wt-on] [data-wt-wallpaper]::before, html[data-wt-on] [data-wt-wallpaper]::after { background-image: none !important; }

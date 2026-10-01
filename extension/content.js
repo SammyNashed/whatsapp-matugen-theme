@@ -127,7 +127,16 @@ function tagUi() {
     layer.style.setProperty("--wt-hy", r.top + "px");
   }
   // Chat wallpaper: one image spanning the whole window; the chat pane shows the slice behind it, the sidebar shows the blurred left part.
-  const stock = document.querySelector('[data-testid="stock-wallpaper-image"]');
+  let stock = document.querySelector('[data-testid="stock-wallpaper-image"], [data-wt-wallpaper]');
+  if (!stock) { // accounts without the newer Chat Themes layout: look for the old full-pane background layer
+    const pane = document.getElementById("main");
+    if (pane) {
+      const pr = pane.getBoundingClientRect();
+      const cand = pane.querySelector("[data-asset-chat-background-dark], [data-asset-chat-background-light]") ||
+        [...pane.children].find((e) => { const r = e.getBoundingClientRect(), cs = getComputedStyle(e); return !e.classList.contains("wt-wall") && cs.position === "absolute" && r.width >= pr.width - 2 && r.height >= pr.height - 2 && cs.backgroundImage !== "none"; });
+      if (cand) { cand.dataset.wtWallpaper = "1"; stock = cand; }
+    }
+  }
   if (stock) {
     let wall = stock.querySelector(":scope > .wt-wall");
     if (!wall) { wall = document.createElement("i"); wall.className = "wt-wall"; stock.prepend(wall); }
@@ -172,7 +181,7 @@ function runHealth() {
   if (side && !(side.parentElement && side.parentElement.dataset.wtGlass)) bad.push("sidebar glass");
   if (root.dataset.wtReady && !document.getElementById("wt-backdrop")) bad.push("background layer");
   if (document.getElementById("main")) {
-    const stock = document.querySelector('[data-testid="stock-wallpaper-image"]');
+    const stock = document.querySelector('[data-testid="stock-wallpaper-image"], [data-wt-wallpaper]');
     if (!stock) bad.push("wallpaper layer (stock-wallpaper-image) not found");
     else if (!stock.querySelector(".wt-wall")) bad.push("wallpaper image not injected");
     const hdr = document.querySelector("#main header");
@@ -183,9 +192,9 @@ function runHealth() {
   for (const id of ["drawer-right", "drawer-left", "drawer-middle", "intro-panel"])
     for (const el of document.querySelectorAll(`[data-testid="${id}"]`))
       if (el.textContent.trim() && !el.querySelector(":scope > .wt-hdr")) bad.push(`${id} panel glass`);
-  if (accent) for (const link of document.querySelectorAll('link[rel~="icon"]')) {
-    const st = iconState.get(link);
-    if (!st || link.href !== st.out) { bad.push("tab icon"); break; }
+  if (accent) { // the tab uses one of the icon links; Firefox may refuse to read a cross-domain one, so one recolored link is enough
+    const links = [...document.querySelectorAll('link[rel~="icon"]')];
+    if (links.length && !links.some((l) => { const st = iconState.get(l); return st && l.href === st.out; })) bad.push("tab icon");
   }
   return [...new Set(bad)];
 }
