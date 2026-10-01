@@ -10,7 +10,7 @@ and every color follows your desktop when you change wallpapers.
 
 <br>
 
-<img src="docs/previews/purple.jpg" alt="WhatsApp Web with a purple wallpaper theme" width="900">
+<img src="docs/theme-cycle.gif" alt="WhatsApp Web changing colors as the wallpaper changes" width="900">
 
 </div>
 
