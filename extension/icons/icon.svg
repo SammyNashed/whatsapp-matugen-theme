@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1230"/><stop offset="1" stop-color="#1b0f3d"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0.25" cy="0.3" r="0.55"><stop offset="0" stop-color="#3b6cff" stop-opacity=".85"/><stop offset="1" stop-color="#3b6cff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowB" cx="0.8" cy="0.85" r="0.55"><stop offset="0" stop-color="#b44bff" stop-opacity=".8"/><stop offset="1" stop-color="#b44bff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".34"/><stop offset="1" stop-color="#ffffff" stop-opacity=".1"/>
+    </linearGradient>
+    <linearGradient id="dot" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7fa0ff"/><stop offset="1" stop-color="#d28bff"/></linearGradient>
+    <clipPath id="sq"><rect width="128" height="128" rx="30"/></clipPath>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="128" height="128" fill="url(#bg)"/>
+    <rect width="128" height="128" fill="url(#glowA)"/>
+    <rect width="128" height="128" fill="url(#glowB)"/>
+  </g>
+  <path d="M30 34h68a14 14 0 0 1 14 14v34a14 14 0 0 1-14 14H64l-22 18v-18h-12a14 14 0 0 1-14-14V48a14 14 0 0 1 14-14z" fill="url(#glass)" stroke="#fff" stroke-opacity=".55" stroke-width="2.5"/>
+  <circle cx="44" cy="65" r="7" fill="url(#dot)"/><circle cx="64" cy="65" r="7" fill="url(#dot)"/><circle cx="84" cy="65" r="7" fill="url(#dot)"/>
+</svg>

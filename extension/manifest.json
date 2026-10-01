@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "WhatsApp Matugen Theme",
+  "version": "0.1.0",
+  "description": "Colors WhatsApp Web chat bubbles and wallpaper from your current desktop wallpaper.",
+  "permissions": [
+    "alarms",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8765/*",
+    "https://web.whatsapp.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://web.whatsapp.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "theme.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "WhatsApp Matugen Theme",
+    "default_popup": "popup.html"
+  }
+}

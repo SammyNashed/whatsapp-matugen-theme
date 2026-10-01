@@ -1,0 +1,28 @@
+/* WhatsApp paints its wallpaper on a dedicated layer covering the whole chat pane (incl. behind the composer); swap its image. */
+html[data-wt-on] [data-testid="stock-wallpaper-image"] { background-image: none !important; overflow: hidden !important; }
+.wt-wall { position: absolute; pointer-events: none; width: calc(100vw + 80px); height: calc(100vh + 80px); left: calc(-1 * var(--wt-wx, 0px) - 40px); top: calc(-1 * var(--wt-wy, 0px) - 40px); background: var(--wt-wall) center / cover; }
+html[data-wt-on] #main .copyable-area,
+html[data-wt-on] #main footer,
+html[data-wt-on] #main footer > div { background: transparent !important; }
+
+/* Acrylic-style sidebar: blurred wallpaper layer behind the page (negative z-index, so WhatsApp's own layout is untouched). */
+#wt-backdrop { display: none; }
+html[data-wt-ready] #wt-backdrop { display: block; position: fixed; inset: -40px; z-index: -1; background: var(--wt-wall) center / cover; filter: blur(14px) brightness(.85); pointer-events: none; }
+html[data-wt-ready] body { background: transparent !important; }
+html[data-wt-ready] #app .one, html[data-wt-ready] #app .two, html[data-wt-ready] #app .three { background: transparent !important; }
+html[data-wt-on] [data-wt-glass] { --WDS-surface-default: transparent !important; background: var(--wt-glass) !important; }
+html[data-wt-on] [data-testid="chatlist-header"] { background: var(--wt-glass-rail) !important; }
+
+/* Composer pill: translucent + blur; it sits over the wallpaper layer so it blurs exactly the wallpaper behind it. */
+html[data-wt-on] [data-wt-pill] { background: var(--wt-glass-pill) !important; backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); }
+
+/* Chat header: its own copy of the sidebar's blurred, tinted wallpaper, offset so it lines up with the screen position (identical look). */
+html[data-wt-on] #main header[data-wt-hdr], html[data-wt-on] [data-testid="drawer-right"][data-wt-hdr], html[data-wt-on] [data-testid="drawer-left"][data-wt-hdr], html[data-wt-on] [data-testid="drawer-middle"][data-wt-hdr], html[data-wt-on] [data-testid="intro-panel"][data-wt-hdr] { isolation: isolate; background: transparent !important; --WDS-surface-default: transparent !important; }
+.wt-hdr { position: absolute; inset: 0; overflow: hidden; z-index: -1; pointer-events: none; }
+.wt-hdr i { position: absolute; width: calc(100vw + 80px); height: calc(100vh + 80px); left: calc(-1 * var(--wt-hx, 0px) - 40px); top: calc(-1 * var(--wt-hy, 0px) - 40px); background: var(--wt-wall) center / cover; filter: blur(14px) brightness(.85); }
+.wt-hdr::after { content: ""; position: absolute; inset: 0; background: var(--wt-glass); }
+
+/* Contact-info drawer: everything inside inherits the transparent surface; the injected layer paints the glass. */
+html[data-wt-on] [data-testid="drawer-right"], html[data-wt-on] [data-testid="drawer-left"], html[data-wt-on] [data-testid="drawer-middle"], html[data-wt-on] [data-testid="intro-panel"] { --WDS-surface-default: transparent !important; --WDS-surface-emphasized: transparent !important; background: transparent !important; }
+html[data-wt-on] [data-testid="chat-info-drawer"] { background: transparent !important; }
+html[data-wt-on] [data-wt-clear="1"] { background: transparent !important; }
