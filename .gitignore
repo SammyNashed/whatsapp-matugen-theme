@@ -1,3 +1,6 @@
 __pycache__/
 debug*.json
 dist/
+store-submission/*.zip
+store-submission/*.png
+store-submission/screenshots/
