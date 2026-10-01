@@ -9,8 +9,11 @@ document.getElementById("go").addEventListener("click", async () => {
   if (!tab || !/^https:\/\/web\.whatsapp\.com\//.test(tab.url || "")) return row("dim", "Open WhatsApp Web in this tab to check the theme.");
   chrome.tabs.sendMessage(tab.id, "health", (bad) => {
     if (chrome.runtime.lastError || !bad) return row("bad", "Theme script not running on this tab. Reload WhatsApp.");
+    chrome.runtime.sendMessage({ health: bad, tabId: tab.id }); // keep the toolbar badge in sync with this fresh result
     if (!bad.length) return row("ok", "All hooks match. Everything is working.");
     row("bad", "Something stopped matching:");
     bad.forEach((b) => row("bad", "• " + b));
   });
 });
+
+document.getElementById("pick").addEventListener("click", () => chrome.runtime.openOptionsPage());

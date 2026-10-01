@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
   "name": "WhatsApp Matugen Theme",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Colors WhatsApp Web chat bubbles and wallpaper from your current desktop wallpaper.",
   "permissions": [
     "alarms",
-    "storage"
+    "storage",
+    "unlimitedStorage"
   ],
   "host_permissions": [
     "http://127.0.0.1:8765/*",
@@ -37,5 +38,6 @@
   "action": {
     "default_title": "WhatsApp Matugen Theme",
     "default_popup": "popup.html"
-  }
+  },
+  "options_page": "options.html"
 }

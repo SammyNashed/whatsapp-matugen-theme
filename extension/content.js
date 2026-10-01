@@ -167,7 +167,7 @@ function runHealth() {
   };
   for (const v of ["--WDS-accent", "--WDS-systems-bubble-surface-outgoing", "--WDS-persistent-always-branded", "--WDS-surface-default"])
     if (!declared(v)) bad.push(`WhatsApp no longer defines ${v} (colors)`);
-  if (!root.dataset.wtOn) bad.push("no theme received (is the helper running?)");
+  if (!root.dataset.wtOn) bad.push("no theme yet (pick a wallpaper in the extension popup, or start the helper)");
   const side = document.getElementById("side");
   if (side && !(side.parentElement && side.parentElement.dataset.wtGlass)) bad.push("sidebar glass");
   if (root.dataset.wtReady && !document.getElementById("wt-backdrop")) bad.push("background layer");
@@ -190,4 +190,11 @@ function runHealth() {
   return [...new Set(bad)];
 }
 chrome.runtime.onMessage.addListener((m, _s, reply) => { if (m === "health") reply(runHealth()); });
-setTimeout(() => { try { chrome.runtime.sendMessage({ health: runHealth() }); } catch (e) { /* extension was reloaded; this old copy is orphaned */ } }, 10000); // one passive check per page load
+// One passive check per page load. WhatsApp can still be starting up at 10s, so a failure is re-checked a few times before raising the badge.
+let healthTries = 0;
+const passiveHealth = () => {
+  const bad = runHealth();
+  if (bad.length && ++healthTries < 4) return setTimeout(passiveHealth, 8000);
+  try { chrome.runtime.sendMessage({ health: bad }); } catch (e) { /* extension was reloaded; this old copy is orphaned */ }
+};
+setTimeout(passiveHealth, 10000);

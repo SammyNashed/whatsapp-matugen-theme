@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhatsApp Matugen Theme: choose your wallpaper</title>
+<link rel="stylesheet" href="options.css">
+</head>
+<body>
+<main>
+  <header>
+    <img src="icons/icon128.png" width="56" height="56" alt="">
+    <div>
+      <h1>Choose your wallpaper</h1>
+      <p>WhatsApp Web will match it: chat background, frosted glass panels and colors.</p>
+    </div>
+  </header>
+
+  <section class="card">
+    <h2>Use your own image</h2>
+    <label class="drop" id="drop">
+      <input type="file" id="file" accept="image/*" hidden>
+      <span class="big">Choose an image</span>
+      <span class="small">or drop one here (JPG, PNG, WebP)</span>
+    </label>
+  </section>
+
+  <section class="card">
+    <h2>Or pick a style</h2>
+    <div class="presets" id="presets"></div>
+  </section>
+
+  <section class="card preview" id="preview" hidden>
+    <h2>Preview</h2>
+    <div class="shot" id="shot"><div class="glass"><div class="bubble out">Looks great</div><div class="bubble in">Right?</div></div></div>
+    <div class="swatches" id="swatches"></div>
+    <div id="accentRow" hidden><p class="hint">Accent color from your image (pick the one you like):</p><div class="accents" id="accents"></div></div>
+    <button id="save" class="primary">Use this wallpaper</button>
+    <p class="status" id="status"></p>
+  </section>
+
+  <section class="card">
+    <h2>Mode</h2>
+    <label class="radio"><input type="radio" name="mode" value="manual"> <span><b>Use the wallpaper I chose</b><small>Works on any computer. Nothing else to install.</small></span></label>
+    <label class="radio"><input type="radio" name="mode" value="auto"> <span><b>Follow my desktop wallpaper</b><small id="helperState">Needs the small helper from the project page (Linux with matugen).</small></span></label>
+  </section>
+</main>
+<script src="lib/mcu.js"></script>
+<script src="options.js"></script>
+</body>
+</html>
