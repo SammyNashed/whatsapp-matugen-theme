@@ -128,7 +128,7 @@ Open the picker (extension icon → **Choose wallpaper**) and check a wallpaper 
 <details>
 <summary><b>Does it work on Firefox or Safari?</b></summary>
 
-Not yet. It needs a Chromium-based browser for now.
+A Firefox version is on the way (the build is ready; it's waiting for Mozilla's add-on review). Until then you can try it from the [releases page](https://github.com/SammyNashed/whatsapp-matugen-theme/releases/latest): download `whatsapp-matugen-theme-firefox.zip`, then in Firefox open `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on** and pick the zip. (Firefox forgets temporary add-ons when you quit it.) Safari isn't supported.
 </details>
 
 ---

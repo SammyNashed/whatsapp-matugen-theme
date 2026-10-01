@@ -1,0 +1,10 @@
+{
+  "name": "whatsapp-matugen-theme-build",
+  "private": true,
+  "description": "Rebuilds extension/lib/mcu.js (bundled Material color library). Run: npm install && npm run build",
+  "scripts": {
+    "build": "esbuild mcu-entry.js --bundle --format=iife --global-name=MCU --minify --outfile=../extension/lib/mcu.js"
+  },
+  "dependencies": { "@material/material-color-utilities": "0.4.0" },
+  "devDependencies": { "esbuild": "0.28.2" }
+}

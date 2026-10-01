@@ -44,3 +44,15 @@ Not affiliated with, endorsed by, or sponsored by WhatsApp or Meta.
 
 ## Notes for the reviewer
 To test: open web.whatsapp.com, click the extension icon, choose "Choose wallpaper", pick a style (for example "Aqua"), press "Use this wallpaper", and reload web.whatsapp.com. The theme applies after login. The optional local helper is not needed for review.
+
+
+---
+
+# Firefox (addons.mozilla.org)
+
+Package: `whatsapp-matugen-theme-firefox.zip` (from `./tools/build.sh`; the only difference is the manifest).
+Add-on ID: `wallpaper-theme-whatsapp@sammynashed.github.io`. Minimum Firefox: 142. Data collection: none.
+Listing text, categories ("Appearance" or "Social & Communication"), screenshots and permission justifications: reuse the sections above.
+Source code: AMO asks for the source of minified files. `extension/lib/mcu.js` is a bundle of `@material/material-color-utilities` 0.4.0; upload `source.zip` (a copy of this repository) and paste the build steps from `tools/BUILD.md`:
+
+> `cd tools && npm install && npm run build` regenerates `extension/lib/mcu.js` from `tools/mcu-entry.js`; `./tools/build.sh` then builds the add-on zip.

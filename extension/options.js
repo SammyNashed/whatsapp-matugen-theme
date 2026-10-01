@@ -70,7 +70,9 @@ async function pick(file) {
 PRESETS.forEach(([name, hex, variant]) => {
   const b = document.createElement("button"); b.className = "preset"; b.type = "button";
   const p = fromPreset(name, hex, variant);
-  b.innerHTML = `<div class="tile" style="background:url(${p.image}) center/cover"></div><span>${name}</span>`;
+  const tile = document.createElement("div"); tile.className = "tile"; tile.style.background = `url(${p.image}) center/cover`;
+  const label = document.createElement("span"); label.textContent = name;
+  b.append(tile, label);
   b.onclick = () => { document.querySelectorAll(".preset").forEach((x) => x.classList.remove("on")); b.classList.add("on"); show(fromPreset(name, hex, variant)); };
   $("presets").appendChild(b);
 });
