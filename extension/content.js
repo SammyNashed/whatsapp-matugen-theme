@@ -190,4 +190,4 @@ function runHealth() {
   return [...new Set(bad)];
 }
 chrome.runtime.onMessage.addListener((m, _s, reply) => { if (m === "health") reply(runHealth()); });
-setTimeout(() => chrome.runtime.sendMessage({ health: runHealth() }), 10000); // one passive check per page load
+setTimeout(() => { try { chrome.runtime.sendMessage({ health: runHealth() }); } catch (e) { /* extension was reloaded; this old copy is orphaned */ } }, 10000); // one passive check per page load
