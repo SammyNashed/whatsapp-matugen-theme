@@ -27,3 +27,9 @@ html[data-wt-on] [data-testid="drawer-right"], html[data-wt-on] [data-testid="dr
 html[data-wt-on] [data-testid="chat-info-drawer"] { background: transparent !important; }
 html[data-wt-on] [data-wt-clear="1"] { background: transparent !important; }
 html[data-wt-on] [data-wt-wallpaper]::before, html[data-wt-on] [data-wt-wallpaper]::after { background-image: none !important; }
+
+/* Older chat layout: #main hosts the wallpaper; the layer sits behind all of its children, and WhatsApp's own full-pane layers are cleared. */
+html[data-wt-on] #main[data-wt-wallpaper] { position: relative; isolation: isolate; background-color: transparent !important; }
+html[data-wt-on] #main[data-wt-wallpaper] > .wt-wall { z-index: -1; }
+html[data-wt-on] [data-wt-layer] { background-image: none !important; }
+html[data-wt-on] [data-wt-layer]::before, html[data-wt-on] [data-wt-layer]::after { background-image: none !important; }

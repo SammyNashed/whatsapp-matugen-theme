@@ -127,16 +127,27 @@ function tagUi() {
     layer.style.setProperty("--wt-hy", r.top + "px");
   }
   // Chat wallpaper: one image spanning the whole window; the chat pane shows the slice behind it, the sidebar shows the blurred left part.
-  let stock = document.querySelector('[data-testid="stock-wallpaper-image"], [data-wt-wallpaper]');
-  if (!stock) { // accounts without the newer Chat Themes layout: look for the old full-pane background layer
-    const pane = document.getElementById("main");
-    if (pane) {
-      const pr = pane.getBoundingClientRect();
-      const cand = pane.querySelector("[data-asset-chat-background-dark], [data-asset-chat-background-light]") ||
-        [...pane.children].find((e) => { const r = e.getBoundingClientRect(), cs = getComputedStyle(e); return !e.classList.contains("wt-wall") && cs.position === "absolute" && r.width >= pr.width - 2 && r.height >= pr.height - 2 && cs.backgroundImage !== "none"; });
-      if (cand) { cand.dataset.wtWallpaper = "1"; stock = cand; }
-    }
-  }
+  let stock = document.querySelector('[data-testid="stock-wallpaper-image"]');
+  const mainEl = document.getElementById("main");
+  if (!stock && mainEl) { // older chat layout (no stock-wallpaper-image): host the wallpaper in #main itself and clear every full-pane layer above it
+    stock = mainEl;
+    mainEl.dataset.wtWallpaper = "1";
+    const pr = mainEl.getBoundingClientRect();
+    const clearLayers = (el, depth) => {
+      for (const e of el.children) {
+        if (e.dataset.wtSeen === "1" || e.classList.contains("wt-wall") || e.classList.contains("wt-hdr") || e.tagName === "HEADER" || e.tagName === "FOOTER") continue;
+        const r = e.getBoundingClientRect();
+        if (r.width < pr.width * 0.9 || r.height < pr.height * 0.4) continue; // small things (rows, bubbles) are never wallpaper layers
+        const cs = getComputedStyle(e);
+        const img = cs.backgroundImage !== "none" || ["::before", "::after"].some((p) => getComputedStyle(e, p).backgroundImage !== "none");
+        if (img) e.dataset.wtLayer = "1";
+        if (cs.backgroundColor !== "rgba(0, 0, 0, 0)" && cs.backgroundColor !== "transparent") e.dataset.wtClear = "1";
+        e.dataset.wtSeen = "1";
+        if (depth < 5) clearLayers(e, depth + 1);
+      }
+    };
+    clearLayers(mainEl, 0);
+  } else if (!stock) stock = document.querySelector("[data-wt-wallpaper]");
   if (stock) {
     let wall = stock.querySelector(":scope > .wt-wall");
     if (!wall) { wall = document.createElement("i"); wall.className = "wt-wall"; stock.prepend(wall); }
@@ -198,7 +209,24 @@ function runHealth() {
   }
   return [...new Set(bad)];
 }
-chrome.runtime.onMessage.addListener((m, _s, reply) => { if (m === "health") reply(runHealth()); });
+// Layout dump of the chat pane for bug reports (structure only, never message text).
+function runDiag() {
+  const lines = [`WhatsApp Matugen Theme diagnostics | ${navigator.userAgent} | ${innerWidth}x${innerHeight}`, `health: ${JSON.stringify(runHealth())}`];
+  const main = document.getElementById("main");
+  if (!main) return lines.concat("no #main (open a chat first)").join("\n");
+  const walk = (el, depth) => {
+    if (depth > 6 || lines.length > 220) return;
+    const cs = getComputedStyle(el), r = el.getBoundingClientRect();
+    const data = [...el.attributes].filter((a) => a.name.startsWith("data-") || a.name === "id" || a.name === "role").map((a) => `${a.name}=${a.value.slice(0, 30)}`).join(" ");
+    const pseudo = ["::before", "::after"].map((p) => { const b = getComputedStyle(el, p).backgroundImage; return b && b !== "none" ? p + ":img" : ""; }).join("");
+    const big = r.width >= 200 && r.height >= 100;
+    if (big || depth < 2) lines.push(`${"  ".repeat(depth)}<${el.tagName.toLowerCase()}> ${data} | ${cs.position} ${Math.round(r.left)},${Math.round(r.top)} ${Math.round(r.width)}x${Math.round(r.height)} z=${cs.zIndex} op=${cs.opacity} bg=${cs.backgroundColor}${cs.backgroundImage !== "none" ? " IMG" : ""} ${pseudo} ${el.classList.contains("wt-wall") ? "[WT-WALL]" : ""}`);
+    if (big || depth < 2) for (const c of el.children) walk(c, depth + 1);
+  };
+  walk(main, 0);
+  return lines.join("\n");
+}
+chrome.runtime.onMessage.addListener((m, _s, reply) => { if (m === "health") reply(runHealth()); else if (m === "diag") reply(runDiag()); });
 // One passive check per page load. WhatsApp can still be starting up at 10s, so a failure is re-checked a few times before raising the badge.
 let healthTries = 0;
 const passiveHealth = () => {

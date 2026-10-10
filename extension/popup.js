@@ -17,3 +17,14 @@ document.getElementById("go").addEventListener("click", async () => {
 });
 
 document.getElementById("pick").addEventListener("click", () => chrome.runtime.openOptionsPage());
+
+document.getElementById("diag").addEventListener("click", async () => {
+  out.textContent = "";
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab || !/^https:\/\/web\.whatsapp\.com\//.test(tab.url || "")) return row("dim", "Open WhatsApp Web (with a chat open) in this tab first.");
+  chrome.tabs.sendMessage(tab.id, "diag", async (txt) => {
+    if (chrome.runtime.lastError || !txt) return row("bad", "Theme script not running on this tab. Reload WhatsApp.");
+    try { await navigator.clipboard.writeText(txt); row("ok", "Copied. Paste it in a message to the developer."); }
+    catch (e) { const ta = document.createElement("textarea"); ta.value = txt; ta.rows = 8; ta.style.width = "100%"; out.appendChild(ta); ta.select(); row("dim", "Select all and copy the text above."); }
+  });
+});
