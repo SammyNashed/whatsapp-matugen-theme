@@ -2,11 +2,17 @@
 const API = "http://127.0.0.1:8765";
 let last = null;
 
+// Shrink to <=1920px JPEG: the data URL lives in a CSS custom property, which Chrome silently drops above ~2 MB (big wallpapers => no image).
 async function toDataUrl(blob) {
-  const buf = new Uint8Array(await blob.arrayBuffer());
+  const bmp = await createImageBitmap(blob);
+  const k = Math.min(1, 1920 / bmp.width), w = Math.round(bmp.width * k), h = Math.round(bmp.height * k);
+  const cv = new OffscreenCanvas(w, h);
+  cv.getContext("2d").drawImage(bmp, 0, 0, w, h);
+  const out = await cv.convertToBlob({ type: "image/jpeg", quality: 0.86 });
+  const buf = new Uint8Array(await out.arrayBuffer());
   let s = "";
   for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-  return "data:" + (blob.type || "image/jpeg") + ";base64," + btoa(s);
+  return "data:image/jpeg;base64," + btoa(s);
 }
 
 async function fetchTheme() {
